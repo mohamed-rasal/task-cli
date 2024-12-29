@@ -6,7 +6,8 @@ import (
 	"log"
 	"os"
 	"slices"
-	task "task-cli/internal"
+
+	task "github.com/mohamed-rasal/task-cli/internal"
 )
 
 func main() {
