@@ -56,7 +56,7 @@ func ReadTaskFromFile(filepath string) ([]byte, error) {
 
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			defaultContent := []byte{}
+			defaultContent := []byte("[]")
 
 			err := os.WriteFile(filepath, defaultContent, 0644)
 

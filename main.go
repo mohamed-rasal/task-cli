@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"slices"
+	"strconv"
 
 	task "github.com/mohamed-rasal/task-cli/internal"
 )
@@ -36,38 +37,41 @@ func main() {
 			fmt.Println("error adding task: %w", err)
 			return
 		}
-		// case "update":
-		// 	if len(os.Args) < 3 {
-		// 		log.Fatal("Missing task ID")
-		// 	}
+	// case "update":
+	// 	if len(os.Args) < 3 {
+	// 		log.Fatal("Missing task ID")
+	// 	}
 
-		// 	if len(os.Args) < 4 {
-		// 		log.Fatal("Missing task description")
-		// 	}
+	// 	if len(os.Args) < 4 {
+	// 		log.Fatal("Missing task description")
+	// 	}
 
-		// 	id, err := strconv.Atoi(os.Args[2])
+	// 	id, err := strconv.Atoi(os.Args[2])
 
-		// 	if err != nil {
-		// 		log.Fatal("Invalid task ID")
-		// 	}
+	// 	if err != nil {
+	// 		log.Fatal("Invalid task ID")
+	// 	}
 
-		// 	description := os.Args[3]
+	// 	description := os.Args[3]
 
-		// 	update(id, description)
-		// case "delete":
-		// 	if len(os.Args) < 3 {
-		// 		fmt.Println("Missing task ID")
-		// 		return
-		// 	}
+	// 	update(id, description)
+	case "delete":
+		if len(os.Args) < 3 {
+			fmt.Println("Missing task ID")
+			return
+		}
 
-		// 	id, err := strconv.Atoi(os.Args[2])
+		id, err := strconv.Atoi(os.Args[2])
 
-		// 	if err != nil {
-		// 		fmt.Println("Invalid task ID")
-		// 		return
-		// 	}
+		if err != nil {
+			fmt.Printf("Invalid task ID: %v\n", os.Args[2])
+			return
+		}
 
-		// 	delete(id)
+		if err := delete(id); err != nil {
+			fmt.Printf("error deleting task: %v", err)
+			return
+		}
 	}
 
 	os.Exit(0)
@@ -91,9 +95,9 @@ func add() error {
 			return fmt.Errorf("error unmarshalling file: %w", err)
 		}
 
-		lastTask := tasks[len(tasks)-1]
-
-		newId = lastTask.Id + 1
+		if len(tasks) > 0 {
+			newId = tasks[len(tasks)-1].Id + 1
+		}
 	}
 
 	taskDescription := os.Args[2]
