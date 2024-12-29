@@ -12,14 +12,14 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: <action> [args]")
+		fmt.Println("usage: <action> [args]")
 		return
 	}
 
 	actions := []string{"add", "update", "delete"}
 
 	if !slices.Contains(actions, os.Args[1]) {
-		fmt.Printf("Invalid action: %v\n", os.Args[1])
+		fmt.Printf("invalid action: %v\n", os.Args[1])
 		return
 	}
 
@@ -28,7 +28,7 @@ func main() {
 	switch action {
 	case "add":
 		if len(os.Args) < 3 {
-			fmt.Println("Missing task description")
+			fmt.Println("missing task description")
 			return
 		}
 
@@ -38,19 +38,19 @@ func main() {
 		}
 	case "update":
 		if len(os.Args) < 3 {
-			fmt.Println("Missing task ID")
+			fmt.Println("missing task ID")
 			return
 		}
 
 		if len(os.Args) < 4 {
-			fmt.Println("Missing task description")
+			fmt.Println("missing task description")
 			return
 		}
 
 		id, err := strconv.Atoi(os.Args[2])
 
 		if err != nil {
-			fmt.Printf("Invalid task ID: %v\n", os.Args[2])
+			fmt.Printf("invalid task ID: %v\n", os.Args[2])
 			return
 		}
 
@@ -62,14 +62,14 @@ func main() {
 		}
 	case "delete":
 		if len(os.Args) < 3 {
-			fmt.Println("Missing task ID")
+			fmt.Println("missing task ID")
 			return
 		}
 
 		id, err := strconv.Atoi(os.Args[2])
 
 		if err != nil {
-			fmt.Printf("Invalid task ID: %v\n", os.Args[2])
+			fmt.Printf("invalid task ID: %v\n", os.Args[2])
 			return
 		}
 
@@ -115,7 +115,7 @@ func add() error {
 		return fmt.Errorf("error writing file: %w", err)
 	}
 
-	fmt.Printf("Task added successfully (ID: %v)\n", newId)
+	fmt.Printf("task added successfully (ID: %v)\n", newId)
 
 	return nil
 }
@@ -149,7 +149,7 @@ func update(id int, description string) error {
 			return fmt.Errorf("error writing file: %w", err)
 		}
 
-		fmt.Printf("Task updated successfully (ID: %v)\n", id)
+		fmt.Printf("task updated successfully (ID: %v)\n", id)
 	}
 
 	return nil
@@ -178,6 +178,8 @@ func delete(id int) error {
 		if err := task.WriteTaskToFile(tasks, filepath); err != nil {
 			return fmt.Errorf("error writing file: %w", err)
 		}
+
+		fmt.Printf("task deleted successfully (ID: %v)\n", id)
 	}
 
 	return nil
