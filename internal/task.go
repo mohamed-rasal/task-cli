@@ -35,6 +35,13 @@ func (t *Task) UpdateTask(description string) *Task {
 	return t
 }
 
+func (t *Task) UpdateTaskStatus(status int) *Task {
+	t.Status = status
+	t.UpdatedAt = time.Now().Format(time.DateTime)
+
+	return t
+}
+
 func WriteTaskToFile(tasks []Task, filePath string) error {
 	t, err := json.MarshalIndent(tasks, "", " ")
 

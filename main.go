@@ -16,7 +16,7 @@ func main() {
 		return
 	}
 
-	actions := []string{"add", "update", "delete"}
+	actions := []string{"add", "update", "delete", "mark-in-progress"}
 
 	if !slices.Contains(actions, os.Args[1]) {
 		fmt.Printf("invalid action: %v\n", os.Args[1])
@@ -75,6 +75,23 @@ func main() {
 
 		if err := delete(id); err != nil {
 			fmt.Printf("error deleting task: %v", err)
+			return
+		}
+	case "mark-in-progress":
+		if len(os.Args) < 3 {
+			fmt.Println("missing task ID")
+			return
+		}
+
+		id, err := strconv.Atoi(os.Args[2])
+
+		if err != nil {
+			fmt.Printf("invalid task ID: %v\n", os.Args[2])
+			return
+		}
+
+		if err := markInProgress(id); err != nil {
+			fmt.Printf("error marking task in progress: %v", err)
 			return
 		}
 	}
@@ -180,6 +197,37 @@ func delete(id int) error {
 		}
 
 		fmt.Printf("task deleted successfully (ID: %v)\n", id)
+	}
+
+	return nil
+}
+
+func markInProgress(id int) error {
+	filepath := "./tasks.json"
+
+	fileContent, err := task.ReadTaskFromFile(filepath)
+
+	if err != nil {
+		return fmt.Errorf("error reading file: %w", err)
+	}
+
+	if len(fileContent) > 0 {
+		tasks := []task.Task{}
+
+		if err := json.Unmarshal(fileContent, &tasks); err != nil {
+			return fmt.Errorf("error unmarshalling file: %w", err)
+		}
+
+		for i, v := range tasks {
+			if v.Id == id {
+				tasks[i] = *v.UpdateTaskStatus(2)
+				break
+			}
+		}
+
+		if err := task.WriteTaskToFile(tasks, filepath); err != nil {
+			return fmt.Errorf("error writing file: %w", err)
+		}
 	}
 
 	return nil
